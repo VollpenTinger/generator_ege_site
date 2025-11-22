@@ -129,7 +129,38 @@
             </div>
         </header>
         <main class="px-3">
-            <h1> Generate variant {{ variant_id }} </h1>
+            <h1> Generate variant {{ variant_number }} </h1>
+            {% for task in tasks %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Задание {{ forloop.counter }}</h5>
+                <small class="text-muted">ID: {{ task.global_id }}</small>
+            </div>
+            <div class="card-body">
+                <!-- Изображение задания -->
+                <img src="{% static task.image_path %}" 
+                     alt="Задание {{ task.global_id }}" 
+                     class="img-fluid mb-3"
+                     style="max-height: 400px; object-fit: contain;">
+                
+                <!-- Поле для ответа -->
+                <div class="mt-3">
+                    <label for="answer{{ forloop.counter }}" class="form-label">Ваш ответ:</label>
+                    <input type="text" class="form-control" id="answer{{ forloop.counter }}" 
+                           placeholder="Введите ответ...">
+                </div>
+                
+                <!-- Скрытый правильный ответ -->
+                <div class="correct-answer mt-2" style="display: none;">
+                    <small class="text-muted">Правильный ответ: {{ task.answer }}</small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-warning">
+            Задания для варианта {{ variant_number }} не найдены.
+        </div>
+        {% endfor %}
         </main>
         <footer class="mt-auto text-white-50">
             <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a
