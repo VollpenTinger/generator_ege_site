@@ -5,9 +5,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Astro v5.13.2">
     <title>Mathege</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -148,26 +145,53 @@
         </footer>
     </div>
     <script>
-        function checkAnswers() {
-            const tasks = document.querySelectorAll('.card');
-            let correctCount = 0;
-            
-            tasks.forEach((task, index) => {
-                const userAnswer = task.querySelector('input').value.trim().toLowerCase();
-                const correctAnswer = task.querySelector('.correct-answer').textContent
-                    .replace('Правильный ответ:', '').trim().toLowerCase();
+            function checkSpace(el) {
+                const input = el.querySelector('input');
+                return !input || input.value.trim() === '';
+            }
+
+            function checkAnswers() {
+                const tasks = document.querySelectorAll('.card');
+                let correctCount = 0;
+                let emptyTasks = [];
                 
-                if (userAnswer === correctAnswer) {
-                    task.style.border = '2px solid green';
-                    correctCount++;
-                } else {
-                    task.style.border = '2px solid red';
-                    task.querySelector('.correct-answer').style.display = 'block';
+                // Сначала проверяем все поля на пустоту
+                tasks.forEach((task, index) => {
+                    // Сбрасываем стили
+                    task.style.border = '1px solid #ccc';
+                    if (task.querySelector('.correct-answer')) {
+                        task.querySelector('.correct-answer').style.display = 'none';
+                    }
+                    
+                    if (checkSpace(task)) {
+                        task.style.border = '2px solid orange';
+                        emptyTasks.push(index + 1);
+                    }
+                });
+                
+                // Если есть пустые поля - показываем сообщение
+                if (emptyTasks.length > 0) {
+                    alert(`Заполни поля в карточках: ${emptyTasks.join(', ')}`);
+                    return; // Прерываем выполнение функции
                 }
-            });
-            
-            alert(`Правильных ответов: ${correctCount} из ${tasks.length}`);
-        }
+                
+                // Если все поля заполнены - проверяем ответы
+                tasks.forEach((task, index) => {
+                    const userAnswer = task.querySelector('input').value.trim().toLowerCase();
+                    const correctAnswer = task.querySelector('.correct-answer').textContent
+                        .replace('Правильный ответ:', '').trim().toLowerCase();
+                    
+                    if (userAnswer === correctAnswer) {
+                        task.style.border = '5px solid green';
+                        correctCount++;
+                    } else {
+                        task.style.border = '4px solid red';
+                        task.querySelector('.correct-answer').style.display = 'block';
+                    }
+                });
+                
+                alert(`Правильных ответов: ${correctCount} из ${tasks.length}`);
+            }
     </script>
 </body>
 </html>
